@@ -116,6 +116,7 @@ class TxSenderReceiverTestCase(SenderReceiverTestCase):
         opts.tx_size = 1
         return opts
 
+
 class P2PTestCase(SenderReceiverTestCase):
     """ listener wrapper test class """
 
@@ -214,6 +215,7 @@ class MessageDeliveryTests(SenderReceiverTestCase):
         recv_messages = self.run_receiver(recv_opts)
         self.assertEqual(len(sent_messages), send_opts.count)
         self.assertEqual(len(recv_messages), send_opts.count)
+
 
 class MessageTypeTests(SenderReceiverTestCase):
     """ message type test group """
@@ -661,11 +663,14 @@ class TxControlOptionsTests(ControlOptionsTests, TxSenderReceiverTestCase):
     def test_timeout_receiver(self):
         pass
 
+
 class TxMessageDeliveryTests(MessageDeliveryTests, TxSenderReceiverTestCase):
     """ transactional test group """
 
+
 class TxMessageTypeTests(MessageTypeTests, TxSenderReceiverTestCase):
     ''' transactional message type test group '''
+
 
 class TxMessageOptionsTests(MessageOptionsTests, TxSenderReceiverTestCase):
     ''' transactional message fields test group '''
@@ -678,8 +683,10 @@ class TxMessageOptionsTests(MessageOptionsTests, TxSenderReceiverTestCase):
     def test_msg_durable(self):
         """ skipped in transactional mode """
 
+
 class TxMessageContentTests(MessageContentTests, TxSenderReceiverTestCase):
     ''' transactional message content test group '''
+
 
 class TxReceiverOptionsTests(ReceiverOptionsTests, TxSenderReceiverTestCase):
     """ transactional receiver options test group """
@@ -688,11 +695,14 @@ class TxReceiverOptionsTests(ReceiverOptionsTests, TxSenderReceiverTestCase):
     def test_message_reply_to(self):
         """ skipped in transactional mode """
 
+
 class TxLoggingOptionsTests(LoggingOptionsTests, TxSenderReceiverTestCase):
     """ transactional logging options test group """
 
+
 class TxConnectionOptionsTests(ConnectionOptionsTests, TxSenderReceiverTestCase):
     """ transactional connection options test group """
+
 
 class TransactionOptionsTests(TxSenderReceiverTestCase):
     """ transactional options test group """
