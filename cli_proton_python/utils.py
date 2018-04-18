@@ -33,6 +33,7 @@ from cli_proton_python import formatter
 if sys.version_info > (3,):
     long = int  # pylint: disable=redefined-builtin,invalid-name
 
+
 def nameval(in_string):
     """
     converts given string to key, value and separator triplets
@@ -58,6 +59,7 @@ def nameval(in_string):
             value = None
     return name, value, separator
 
+
 def sleep4next(in_ts, in_count, in_duration, in_indx):
     """
     custom sleep for checkpoints
@@ -74,6 +76,7 @@ def sleep4next(in_ts, in_count, in_duration, in_indx):
                 break
 
             time.sleep(0.1)
+
 
 def hard_retype(value):
     """
@@ -93,6 +96,7 @@ def hard_retype(value):
             if value.lower() in ('true', 'false'):
                 return value.lower() == 'true'
             return value
+
 
 def print_message(msg, msg_format):
     """
@@ -115,6 +119,7 @@ def print_message(msg, msg_format):
     elif msg_format == 'json':
         print(formatter.Formatter(msg).print_message_as_json())
 
+
 def retype_content(content, content_type):
     """
     converts the content depending on type
@@ -135,6 +140,7 @@ def retype_content(content, content_type):
     elif content_type == 'bool':
         return bool(content)
     return content
+
 
 def prepare_flat_map(entries, e_type=None):
     """ prepares map content from multiple key, value pairs
@@ -158,6 +164,7 @@ def prepare_flat_map(entries, e_type=None):
         else:
             flat_map[name] = val
     return flat_map
+
 
 def set_up_client_logging(level):
     """
@@ -183,6 +190,7 @@ def set_up_client_logging(level):
             raise ValueError('Invalid log level: %s' % level)
         logging.basicConfig(level=level.upper())
 
+
 def dump_event(event):
     """
     dumps proton event object
@@ -202,6 +210,7 @@ def dump_event(event):
                 statistics[str_obj][obj_attr] = '%s' % getattr(ev_obj, obj_attr)
 
     print(formatter.Formatter(statistics).print_stats())
+
 
 def dump_error(err_message):
     """
