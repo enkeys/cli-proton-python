@@ -343,11 +343,13 @@ texinfo_documents = [
 
 # build the api documentation
 
+
 def run_apidoc(_):
-    ''' install dependencies and generate API documentation '''
+    """ install dependencies and generate API documentation """
     os.system('pip install python-qpid-proton')
     main([None, '-e', '-o', "api", "../cli_proton_python", '-f', '-d', '1'])
 
+
 def setup(app):
-    ''' call the API documentation generator when the builder object has been created '''
+    """ call the API documentation generator when the builder object has been created """
     app.connect('builder-inited', run_apidoc)

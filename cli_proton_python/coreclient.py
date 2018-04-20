@@ -181,7 +181,7 @@ class CoreClient(proton.handlers.MessagingHandler):
                 event.connection.close()
 
     def print_message(self, message):
-        '''
+        """
         prints or store a message
 
         utils.print_message wrapper
@@ -190,18 +190,18 @@ class CoreClient(proton.handlers.MessagingHandler):
         :type msg: proton.Message
         :param msg_format: pre-defined message format
         :type msg_format: str
-        '''
+        """
         if self.opts.log_msgs == 'store':
             self.msgs.append(message)
         else:
             utils.print_message(message, self.opts.log_msgs)
 
     def get_messages(self):
-        ''' returns list of stored messages '''
+        """ returns list of stored messages """
         return self.msgs
 
     def clear_messages(self):
-        ''' clears list of stored messages '''
+        """ clears list of stored messages """
         self.msgs = []
 
     def set_delay_before(self):
@@ -282,18 +282,18 @@ class CustomBackoff(proton.reactor.Backoff):
         self.timeout = timeout or 0
 
     def reset(self):
-        ''' resets the reconnect attempts counters '''
+        """ resets the reconnect attempts counters """
         self.failed = 0
         self.cumulative = 0
         super(CustomBackoff, self).reset()
 
     def next(self):
-        '''
+        """
         implements the reconnect attempt action
 
         :return: next reconnect attempt delay time
         :rtype: float
-        '''
+        """
         current = self.delay
         if current == 0:
             self.delay = self.interval or 0.1

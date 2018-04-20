@@ -25,8 +25,8 @@ from __future__ import absolute_import
 import optparse
 import sys
 
+# Python 2.x cmdline options to unicode conversion callback functions
 
-### Python 2.x cmdline options to unicode conversion callback functions
 
 def convert_to_unicode(value):
     """
@@ -42,6 +42,7 @@ def convert_to_unicode(value):
     except AttributeError:
         return value
 
+
 def to_unicode(option, _, value, parser):
     """ stores values of multi-value cmdline string, converts to unicode for Python 2.x
 
@@ -56,6 +57,7 @@ def to_unicode(option, _, value, parser):
     int_value = convert_to_unicode(value)
     lst.append(int_value)
     setattr(parser.values, option.dest, lst)
+
 
 def str_to_unicode(option, _, value, parser):
     """

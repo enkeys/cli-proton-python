@@ -331,7 +331,7 @@ class MessageOptionsTests(SenderReceiverTestCase):
         send_opts.msg_properties = {'test=property'}
         sent_messages = self.run_sender(send_opts)
         recv_messages = self.run_receiver()
-        self.assertEqual(sent_messages[0].properties, {'test':'property'})
+        self.assertEqual(sent_messages[0].properties, {'test': 'property'})
         self.assertEqual(sent_messages[0].properties, recv_messages[0].properties)
 
 
@@ -391,7 +391,7 @@ class MessageContentTests(SenderReceiverTestCase):
         recv_messages = self.run_receiver()
         self.assertEqual(len(recv_messages), send_opts.count)
         self.assertEqual(recv_messages[0].body, 'message 0')
-        self.assertEqual(recv_messages[(send_opts.count)-1].body, "message %s" %(send_opts.count-1))
+        self.assertEqual(recv_messages[send_opts.count-1].body, "message %s" % (send_opts.count-1))
 
 
 @unittest.skip("test not implemented yet")
@@ -427,6 +427,7 @@ class ConnectionOptionsTests(SenderReceiverTestCase):
         sent_messages = self.run_sender(send_opts)
         recv_messages = self.run_receiver(recv_opts)
         self.assertTrue(len(sent_messages) == len(recv_messages) == 1)
+
 
 @unittest.skip("test class not implemented yet")
 class LinkOptionsTests(SenderReceiverTestCase):
@@ -669,11 +670,11 @@ class TxMessageDeliveryTests(MessageDeliveryTests, TxSenderReceiverTestCase):
 
 
 class TxMessageTypeTests(MessageTypeTests, TxSenderReceiverTestCase):
-    ''' transactional message type test group '''
+    """ transactional message type test group """
 
 
 class TxMessageOptionsTests(MessageOptionsTests, TxSenderReceiverTestCase):
-    ''' transactional message fields test group '''
+    """ transactional message fields test group """
 
     @unittest.skip("known issue#19")
     def test_msg_reply_to(self):
@@ -685,7 +686,7 @@ class TxMessageOptionsTests(MessageOptionsTests, TxSenderReceiverTestCase):
 
 
 class TxMessageContentTests(MessageContentTests, TxSenderReceiverTestCase):
-    ''' transactional message content test group '''
+    """ transactional message content test group """
 
 
 class TxReceiverOptionsTests(ReceiverOptionsTests, TxSenderReceiverTestCase):
