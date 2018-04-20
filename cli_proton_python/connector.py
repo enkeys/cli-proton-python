@@ -65,12 +65,16 @@ class Connector(coreclient.CoreClient):
         closes all the open objects (after given close-sleep time)
         """
         time.sleep(self.opts.close_sleep)
+
         if "R" in self.opts.obj_ctrl:
             self.receiver.close()
+
         if "S" in self.opts.obj_ctrl:
             self.sender.close()
+
         if self.opts.obj_ctrl == "CE":
             self.session.close()
+
         if "C" in self.opts.obj_ctrl:
             self.connection.close()
 
@@ -111,6 +115,7 @@ class Connector(coreclient.CoreClient):
         self.result['link']['open'] += 1
         if event.link.is_sender:
             self.result['link']['sender']['open'] += 1
+
         if event.link.is_receiver:
             self.result['link']['receiver']['open'] += 1
 

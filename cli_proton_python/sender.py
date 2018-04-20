@@ -47,11 +47,15 @@ class Send(coreclient.CoreClient):
         :type opts: optparse.Values instance
         """
         reactor_opts = {}
+
         if opts.reactor_auto_settle_off:
             reactor_opts['auto_settle'] = False
+
         if opts.reactor_peer_close_is_error:
             reactor_opts['peer_close_is_error'] = True
+
         super(Send, self).__init__(opts, reactor_opts)
+
         self.msg_sent_cnt = 0
         self.msg_confirmed_cnt = 0
         self.msg_total_cnt = opts.count
@@ -118,6 +122,7 @@ class Send(coreclient.CoreClient):
         content = {}
         if self.opts.msg_map_items != ['']:
             content = utils.prepare_flat_map(self.opts.msg_map_items, self.opts.content_type)
+
         return content
 
     def prepare_string_content(self, content):
@@ -134,8 +139,10 @@ class Send(coreclient.CoreClient):
         """
         if content is not None and re.search('%[ 0-9]*d', content) is not None:
             self.msg_content_fmt = True
+
         if self.opts.content_type:
             return utils.retype_content(content, self.opts.content_type)
+
         return content
 
     def prepare_content(self):
@@ -162,6 +169,7 @@ class Send(coreclient.CoreClient):
             return self.prepare_list_content(), "amqp/list"
         elif self.opts.msg_map_items:
             return self.prepare_map_content(), "amqp/map"
+
         return self.prepare_string_content(content), "text/plain"
 
     def prepare_message(self):
@@ -177,30 +185,42 @@ class Send(coreclient.CoreClient):
 
         if self.opts.msg_durable.lower() == "yes" or self.opts.msg_durable.lower() == "true":
             msg.durable = True
+
         if self.opts.msg_priority is not None:
             msg.priority = self.opts.msg_priority
+
         if self.opts.msg_id is not None:
             msg.id = self.opts.msg_id
+
         if self.opts.msg_correlation_id is not None:
             msg.correlation_id = self.opts.msg_correlation_id
+
         if self.opts.msg_user_id is not None:
             msg.user_id = self.opts.msg_user_id.encode('utf-8')
+
         if self.opts.msg_group_id is not None:
             msg.group_id = self.opts.msg_group_id.encode('utf-8')
+
         if self.opts.msg_group_seq:
             msg.group_sequence = self.opts.msg_group_seq
+
         if self.opts.msg_reply_to is not None:
             msg.reply_to = self.opts.msg_reply_to
+
         if self.opts.msg_subject is not None:
             msg.subject = self.opts.msg_subject
+
         if self.opts.msg_ttl is not None:
             msg.ttl = self.opts.msg_ttl / 1000
+
         if self.opts.msg_content_type is not None:
             msg.content_type = self.opts.msg_content_type
+
         if self.opts.msg_address is not None:
             msg.address = self.opts.msg_address
         else:
             msg.content_type = msg_content_type
+
         msg.properties = utils.prepare_flat_map(self.opts.msg_properties)
         msg.body = msg_content
 
@@ -255,6 +275,7 @@ class Send(coreclient.CoreClient):
             self.msg = self.prepare_message()
             self.msg_content = self.msg.body
             self.event = event
+
             # we are sending first message or first after we previously ran out of credit
             if not self.tearing_down and self.msg_sent_cnt < self.msg_total_cnt:
                 if self.msg_sent_cnt != 0:
@@ -341,8 +362,10 @@ class TxSend(Send, proton.handlers.TransactionHandler):
         :type opts: optparse.Values instance
         """
         super(TxSend, self).__init__(opts)
+
         if not self.auto_settle:
             raise NotImplementedError("Manual settling not supported in TX mode")
+
         self.current_batch = 0
         self.msg_processed_cnt = 0
         self.sender = None
@@ -355,8 +378,10 @@ class TxSend(Send, proton.handlers.TransactionHandler):
         :type event: proton.Event
         """
         msg = self.prepare_message()
+
         if self.msg_content_fmt:
             msg_content = msg.body
+
         while event.transaction and self.sender.credit and (
                 self.msg_processed_cnt + self.current_batch) < self.msg_total_cnt:
             if self.msg_content_fmt:

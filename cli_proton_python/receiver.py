@@ -106,16 +106,22 @@ class Recv(coreclient.CoreClient):
         :rtype: list
         """
         link_opts = super(Recv, self).parse_link_options()
+
         if self.opts.link_durable:
             link_opts.append(proton.reactor.DurableSubscription())
+
         if self.opts.recv_browse:
             link_opts.append(proton.reactor.Copy())
+
         if self.opts.recv_consume:
             link_opts.append(proton.reactor.Move())
+
         if self.opts.recv_filter:
             link_opts.append(proton.reactor.Filter(utils.prepare_flat_map(self.opts.recv_filter)))
+
         if self.opts.recv_selector is not None:
             link_opts.append(proton.reactor.Selector(self.opts.recv_selector))
+
         if self.opts.link_dynamic_node_properties:
             link_opts.append(proton.reactor.DynamicNodeProperties(
                 utils.prepare_flat_map(self.opts.link_dynamic_node_properties)
@@ -132,8 +138,10 @@ class Recv(coreclient.CoreClient):
 
         if self.opts.action == "reject":
             self.reject(delivery)
+
         elif self.opts.action == "release":
             self.release(delivery)
+
         elif self.opts.action != "noack":
             self.accept(delivery)
 

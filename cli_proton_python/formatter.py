@@ -156,16 +156,22 @@ class Formatter(object):
         """
         if in_data is None:
             return "None"
+
         elif isinstance(in_data, bool):
             return str(in_data)
+
         elif isinstance(in_data, (int, long)):
             return Formatter.format_int(in_data)
+
         elif isinstance(in_data, float):
             return Formatter.format_float(in_data)
+
         elif isinstance(in_data, dict):
             return Formatter.format_dict(in_data)
+
         elif isinstance(in_data, list):
             return Formatter.format_list(in_data)
+
         return Formatter.format_string(in_data)
 
     def print_message_as_dict(self):
@@ -197,6 +203,7 @@ class Formatter(object):
             if k == 'expiry_time':
                 k = 'expiration'  # rename field
                 int_value = int(int_value * 1000)  # convert to milliseconds
+
             if k == 'ttl':
                 int_value = int(int_value * 1000)  # convert to milliseconds
 
@@ -235,18 +242,24 @@ class Formatter(object):
             if k == 'expiry_time':
                 k = 'absolute-expiry-time'  # rename field
                 int_value = int(int_value * 1000)  # convert to milliseconds
+
             if k == 'ttl':
                 int_value = int(int_value * 1000)  # convert to milliseconds
+
             if k == 'creation_time':
                 int_value = int(int_value * 1000)  # convert to milliseconds
+
             if k == 'user_id' and (int_value is None or int_value == ''):
                 int_value = None
+
             if (k == 'content_type'
                     and (int_value is None or int_value == '' or int_value == 'None')):
                 int_value = None
+
             if (k == 'content_encoding'
                     and (int_value is None or int_value == '' or int_value == 'None')):
                 int_value = None
+
             if k in ['id', 'correlation_id']:
                 if int_value is not None and str(int_value).startswith("ID:"):
                     int_value = int_value[3:]

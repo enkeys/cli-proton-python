@@ -51,9 +51,11 @@ class CoreClient(proton.handlers.MessagingHandler):
         self.url = proton.Url(opts.broker_url)
         self.msg_total_cnt = None
         self.start_tm = time.time()
+
         self.opts = opts
         if getattr(opts, 'sync_mode', None) or getattr(opts, 'capacity', None):
             raise NotImplementedError("Options not implemented yet: 'sync_mode', 'capacity'")
+
         self.auto_settle = reactor_opts.get('auto_settle', True)
         self.timeout = None
         self.next_task = None
@@ -69,11 +71,13 @@ class CoreClient(proton.handlers.MessagingHandler):
         """
 
         conn_opts = {}
+
         if self.opts.conn_urls is not None:
             if not isinstance(self.opts.conn_urls, (str, list)):
                 raise ValueError('Invalid conn-urls value, expected string or list: %s'
                                  % self.opts.conn_urls)
             conn_opts['urls'] = proton.reactor.Urls(self.opts.conn_urls)
+
         if self.opts.conn_reconnect == 'false':
             conn_opts['reconnect'] = False
         elif (self.opts.conn_reconnect_interval
@@ -87,12 +91,16 @@ class CoreClient(proton.handlers.MessagingHandler):
                 raise ValueError('Invalid conn-heartbeat value, expected number: %s'
                                  % self.opts.conn_heartbeat)
             conn_opts['heartbeat'] = self.opts.conn_heartbeat
+
         if self.opts.conn_handler is not None:
             raise NotImplementedError("Option not implemented yet: 'conn_handler'")
+
         if self.opts.conn_max_frame_size is not None:
             conn_opts['max_frame_size'] = self.opts.conn_max_frame_size
+
         if self.opts.conn_allowed_mechs is not None:
             conn_opts['allowed_mechs'] = self.opts.conn_allowed_mechs
+
         return conn_opts
 
     def parse_link_options(self):
@@ -105,6 +113,7 @@ class CoreClient(proton.handlers.MessagingHandler):
         link_opts = []
         if self.opts.link_at_least_once:
             link_opts.append(proton.reactor.AtLeastOnce())
+
         if self.opts.link_at_most_once:
             link_opts.append(proton.reactor.AtMostOnce())
         return link_opts
@@ -121,9 +130,12 @@ class CoreClient(proton.handlers.MessagingHandler):
         if not self.opts.conn_ssl_trust_store:
             raise ValueError('trust store path needs to be given: %s'
                              % self.opts.conn_ssl_trust_store)
+
         event.container.ssl.client.set_trusted_ca_db(self.opts.conn_ssl_trust_store)
+
         if self.opts.conn_ssl_verify_peer_name:
             event.container.ssl.client.set_peer_authentication(proton.SSLDomain.VERIFY_PEER_NAME)
+
         elif self.opts.conn_ssl_verify_peer:
             event.container.ssl.client.set_peer_authentication(proton.SSLDomain.VERIFY_PEER)
 
@@ -137,6 +149,7 @@ class CoreClient(proton.handlers.MessagingHandler):
         if not self.opts.conn_ssl_private_key:
             raise ValueError('client private key path needs to be given: %s'
                              % self.opts.conn_ssl_private_key)
+
         event.container.ssl.client.set_credentials(self.opts.conn_ssl_certificate,
                                                    self.opts.conn_ssl_private_key,
                                                    self.opts.conn_ssl_password)
@@ -152,6 +165,7 @@ class CoreClient(proton.handlers.MessagingHandler):
                 or self.opts.conn_ssl_verify_peer_name
                 or self.opts.conn_ssl_verify_peer):
             self.set_up_ssl_server_auth(event)
+
         if self.opts.conn_ssl_certificate:
             self.set_up_ssl_client_auth(event)
 
@@ -167,16 +181,22 @@ class CoreClient(proton.handlers.MessagingHandler):
         if self.auto_settle or settled:
             if self.next_task is not None:
                 self.next_task.cancel()
+
             if self.timeout is not None:
                 self.timeout.cancel()
+
             if self.opts.log_stats == 'endpoints':
                 utils.dump_event(event)
+
             self.tearing_down = True
             time.sleep(self.opts.close_sleep)
+
             if event.receiver:
                 event.receiver.close()
+
             if event.sender:
                 event.sender.close()
+
             if event.connection:
                 event.connection.close()
 
@@ -301,8 +321,10 @@ class CustomBackoff(proton.reactor.Backoff):
             if self.interval is None:
                 self.delay = min(60, 2 * current)
         self.failed += 1
+
         if self.limit and self.failed > self.limit:
             raise Exception('Failed to reconnect within defined %i attempts limit' % self.limit)
+
         if self.timeout and self.cumulative >= self.timeout:
             raise Exception('Failed to reconnect within defined %.f seconds timeout' % self.timeout)
         print('Connection error: reconnect attempt %i of %i, next in attempt: %.1f seconds'
