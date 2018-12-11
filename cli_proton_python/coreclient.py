@@ -25,8 +25,8 @@ from __future__ import absolute_import, print_function, division
 import time
 
 import proton
-import proton.reactor
 import proton.handlers
+import proton.reactor
 
 from cli_proton_python import utils
 
@@ -188,15 +188,17 @@ class CoreClient(proton.handlers.MessagingHandler):
 
         utils.print_message wrapper
 
-        :param msg: message
-        :type msg: proton.Message
-        :param msg_format: pre-defined message format
-        :type msg_format: str
+        :param message: message
+        :type message: proton.Message
         '''
         if self.opts.log_msgs == 'store':
             self.msgs.append(message)
         else:
-            utils.print_message(message, self.opts.log_msgs)
+            utils.print_message(
+                msg=message,
+                msg_format=self.opts.log_msgs,
+                message_content_hashed=self.opts.log_msg_content_hashed
+            )
 
     def get_messages(self):
         ''' returns list of stored messages '''

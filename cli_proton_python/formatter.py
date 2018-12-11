@@ -22,9 +22,11 @@
 
 from __future__ import absolute_import
 
-import sys
-import json
 import ast
+import json
+import sys
+from hashlib import sha1
+
 import proton
 
 if sys.version_info > (3,):
@@ -35,13 +37,16 @@ if sys.version_info > (3,):
 class Formatter(object):
     """ Output formatter class for clients """
 
-    def __init__(self, message):
+    def __init__(self, message, message_content_hashed=False):
         """ Formatter constructor
 
         :param message: message to be printed
-        :type message: object
+        :type message: proton.Message
         """
         self.msg = message
+
+        if message_content_hashed and self.msg.body:
+            self.msg.body = self.make_hash(self.msg.body)
 
     def print_message(self):
         """
@@ -297,3 +302,16 @@ class Formatter(object):
         :rtype: str, unicode
         """
         return in_data.replace("'", "\\'")
+
+    @staticmethod
+    def make_hash(in_put):
+        """
+        Return the digest value as a string of hexadecimal digits.
+        :param in_put: Content which will be hashed
+        :type in_put: str or basestring (u'' , b'')
+        :return: Return the digest value as a string of hexadecimal digits.
+        """
+        try:
+            return sha1(in_put.encode("utf-8")).hexdigest()
+        except AttributeError:
+            return sha1(in_put).hexdigest()

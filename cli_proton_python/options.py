@@ -189,6 +189,8 @@ class SRCoreOptions(CoreOptions):
         group.add_option("--log-msgs", type="choice", action="store",
                          choices=['dict', 'body', 'upstream', 'none', 'interop', 'json'],
                          help="message[s] reporting style (default %default)")
+        group.add_option("--log-msg-content-hashed", action="store_true", default=False,
+                         help="print the message content as a hash (SHA1)")
 
     def add_transaction_options(self):
         """ add the transaction options """

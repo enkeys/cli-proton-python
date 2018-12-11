@@ -22,13 +22,12 @@
 
 from __future__ import absolute_import, print_function, division
 
+import logging
 import os
 import sys
 import time
-import logging
 
 from cli_proton_python import formatter
-
 
 if sys.version_info > (3,):
     long = int  # pylint: disable=redefined-builtin,invalid-name
@@ -94,26 +93,31 @@ def hard_retype(value):
                 return value.lower() == 'true'
             return value
 
-def print_message(msg, msg_format):
+
+def print_message(msg, msg_format, message_content_hashed=False):
     """
-    prints a message in coresponding format
+    prints a message in corresponding format
 
     :param msg: message
     :type msg: proton.Message
     :param msg_format: pre-defined message format
     :type msg_format: str
+    :param message_content_hashed: print message content as a sha1 hash
+    :type message_content_hashed: bool
     """
+    frm = formatter.Formatter(msg, message_content_hashed=message_content_hashed)
 
     if msg_format == 'body':
-        print(msg.body)
+        print(frm.msg.body)
     elif msg_format == 'dict':
-        print(formatter.Formatter(msg).print_message_as_dict())
+        print(frm.print_message_as_dict())
     elif msg_format == 'upstream':
-        print(formatter.Formatter(msg).print_message())
+        print(frm.print_message())
     elif msg_format == 'interop':
-        print(formatter.Formatter(msg).print_message_as_interop())
+        print(frm.print_message_as_interop())
     elif msg_format == 'json':
-        print(formatter.Formatter(msg).print_message_as_json())
+        print(frm.print_message_as_json())
+
 
 def retype_content(content, content_type):
     """
